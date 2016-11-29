@@ -1,15 +1,12 @@
 package atlas.c.smartview;
 
-import java.awt.Color;
-
-import atlas.c.xinu.Queries;
-
-import com.ensoftcorp.atlas.core.xcsg.XCSG;
-import com.ensoftcorp.atlas.core.highlight.Highlighter;
 import com.ensoftcorp.atlas.core.query.Q;
 import com.ensoftcorp.atlas.core.script.StyledResult;
+import com.ensoftcorp.atlas.core.xcsg.XCSG;
 import com.ensoftcorp.atlas.ui.scripts.selections.FilteringAtlasSmartViewScript;
 import com.ensoftcorp.atlas.ui.selection.event.IAtlasSelectionEvent;
+
+import atlas.c.xinu.Queries;
 /**
  * For a selected node, displays the immediate type and the basis of that type.
  *
