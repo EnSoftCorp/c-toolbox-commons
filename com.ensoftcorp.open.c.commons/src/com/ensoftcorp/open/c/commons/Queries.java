@@ -1,19 +1,14 @@
-package atlas.c.xinu;
-
-import static com.ensoftcorp.atlas.core.script.Common.codemap;
-import static com.ensoftcorp.atlas.core.script.Common.edges;
-import static com.ensoftcorp.atlas.core.script.Common.universe;
+package com.ensoftcorp.open.c.commons;
 
 import com.ensoftcorp.atlas.core.db.graph.Graph;
 import com.ensoftcorp.atlas.core.db.graph.GraphElement;
-import com.ensoftcorp.atlas.core.db.graph.GraphElement.EdgeDirection;
-import com.ensoftcorp.atlas.core.db.graph.GraphElement.NodeDirection;
 import com.ensoftcorp.atlas.core.db.graph.Node;
 import com.ensoftcorp.atlas.core.db.set.AtlasHashSet;
 import com.ensoftcorp.atlas.core.db.set.AtlasSet;
 import com.ensoftcorp.atlas.core.query.Q;
 import com.ensoftcorp.atlas.core.script.Common;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
+import com.ensoftcorp.open.commons.analysis.StandardQueries;
 
 public class Queries {
 	
@@ -22,7 +17,7 @@ public class Queries {
 	 * @return
 	 */
 	public static Q callEdges() {
-		return codemap().edgesTaggedWithAny(XCSG.Call);
+		return Common.universe().edgesTaggedWithAny(XCSG.Call);
 	}
 	
 	/**
@@ -135,7 +130,8 @@ public class Queries {
 	 * @return the CFG of the given function(s)
 	 */
 	public static Q cfg(Q funcs){
-		return funcs.contained().nodesTaggedWithAny(XCSG.ControlFlow_Node).induce(edges(XCSG.ControlFlow_Edge));
+		Q controlFlowEdges = Common.universe().edgesTaggedWithAny(XCSG.ControlFlow_Edge);
+		return funcs.contained().nodesTaggedWithAny(XCSG.ControlFlow_Node).induce(controlFlowEdges);
 	}
 	
 	/**
@@ -197,7 +193,8 @@ public class Queries {
 	 * @param nodes: control-flow node(s)
 	 */
 	public static Q inducecfg(Q nodes){
-		return nodes.induce(edges(XCSG.ControlFlow_Edge));
+		Q controlFlowEdges = Common.universe().edgesTaggedWithAny(XCSG.ControlFlow_Edge);
+		return nodes.induce(controlFlowEdges);
 	}
 	
 	/**
@@ -241,7 +238,7 @@ public class Queries {
 	 * @return intra-procedural data-flow graph
 	 */
 	public static Q projectdfg(Q dfg, Q func){
-		return func.contained().induce(universe()).intersection(dfg);
+		return func.contained().induce(Common.universe()).intersection(dfg);
 	}
 	
 	/**
@@ -250,7 +247,8 @@ public class Queries {
 	 * @return a forward data-flow graph from the selected node
 	 */
 	public static Q forwardSlice(Q node){
-		return edges(XCSG.LocalDataFlow).forward(node);
+		Q localDataFlowEdges = Common.universe().edgesTaggedWithAny(XCSG.LocalDataFlow);
+		return localDataFlowEdges.forward(node);
 	}
 	
 	/**
@@ -265,13 +263,14 @@ public class Queries {
 	 * </code>
 	 * 
 	 * @param functionContext caller of functionSource
-	 * @param functionSource return value to use as origin in data-flow graph
+	 * @param functionSourceName return value to use as origin in data-flow graph
 	 * @param functionSink stopping point for data-flow graph
 	 */
-	public static Q dfg(String functionContext, String functionSource, String functionSink) {
+	public static Q dfg(String functionContext, String functionSourceName, String functionSink) {
 		// find CallSites to "functionSource" within "functionContext"
-		Q qFunctionSource = function(functionSource);
-		Q callSites = edges(XCSG.InvokedFunction).predecessors(qFunctionSource);
+		Q functionSource = function(functionSourceName);
+		Q invokedFunctionEdges = Common.universe().edgesTaggedWithAny(XCSG.InvokedFunction);
+		Q callSites = invokedFunctionEdges.predecessors(functionSource);
 		Q callSitesInFunction = function(functionContext).contained().intersection(callSites);
 
 		// take the contents of "functionSink" as the stopping point for flows
@@ -294,12 +293,12 @@ public class Queries {
 	
 	private static Q findByName(String functionName, String tag) {
 		if(functionName.indexOf("*") >= 0){
-			Q nodes = universe().nodesTaggedWithAll(tag);
+			Q nodes = Common.universe().nodesTaggedWithAll(tag);
 			Q result = getMatches(functionName, nodes);
 			return result;
 		}
 		// Atlas has an index over literal attribute values, so it's faster to query directly
-		return universe().nodesTaggedWithAll(tag).selectNode(XCSG.name, functionName);
+		return Common.universe().nodesTaggedWithAll(tag).selectNode(XCSG.name, functionName);
 	}
 
 	/**
@@ -323,8 +322,8 @@ public class Queries {
 	 * @return the induced Call Graph
 	 */
 	private static Q refVariable(Q variable){
-		Q read =  universe().edgesTaggedWithAny(XCSG.Reads).reverseStep(variable);
-		Q write = universe().edgesTaggedWithAll(XCSG.Writes).reverseStep(variable);
+		Q read =  Common.universe().edgesTaggedWithAny(XCSG.Reads).reverseStep(variable);
+		Q write = Common.universe().edgesTaggedWithAll(XCSG.Writes).reverseStep(variable);
 		Q all = read.union(write);
 		all = Common.extend(all, XCSG.Contains);
 		return all.nodesTaggedWithAll(XCSG.Function).induce(callEdges());
@@ -338,39 +337,16 @@ public class Queries {
 	 * @return Functions containing the given nodes
 	 */
 	public static Q getContainingFunction(Q nodes) {
-		
 		AtlasSet<Node> ns = nodes.eval().nodes();
 		AtlasSet<GraphElement> containingFunctions = new AtlasHashSet<GraphElement>();
-		for (GraphElement node : ns) {
-			GraphElement function = getContainingFunction(node);
+		for (Node node : ns) {
+			GraphElement function = StandardQueries.getContainingFunction(node);
 			if (function != null)
 				containingFunctions.add(function);
 		}
-		Q functions = Common.toQ(Common.toGraph(containingFunctions));
+		Q functions = Common.toQ(containingFunctions);
 		
 		return functions;
-	}
-	
-	/**
-	 * Returns the containing function of a given graph element or null if one is not found
-	 * @param ge
-	 * @return
-	 */
-	public static GraphElement getContainingFunction(GraphElement ge) {
-		// NOTE: the enclosing function may be two steps or more above
-		Graph contains = Common.universe().edgesTaggedWithAll(XCSG.Contains).eval();
-		while (ge != null) {
-			AtlasSet<GraphElement> containsEdges = contains.edges(ge, NodeDirection.IN);
-			if (!containsEdges.isEmpty()) {
-				GraphElement parent = containsEdges.getFirst().getNode(EdgeDirection.FROM);
-				if (parent.taggedWith(XCSG.Function))
-					return parent;
-				ge = parent;
-			} else {
-				ge = null;
-			}
-		}
-		return null;
 	}
 
 	private static Q getMatches(String name, Q nodes){
@@ -398,7 +374,7 @@ public class Queries {
 	}
 	
 	public static Q functionPtr(){
-		Q dataFlowEdges = universe().edgesTaggedWithAll(XCSG.DataFlow_Edge);
+		Q dataFlowEdges = Common.universe().edgesTaggedWithAll(XCSG.DataFlow_Edge);
 		Q functions = functions("*");
 		return dataFlowEdges.forwardStep(functions);
 	}
@@ -409,6 +385,7 @@ public class Queries {
 	 * @return The call site nodes
 	 */
 	public static Q functionReturn(Q functions) {
-		return edges(XCSG.Contains).forwardStep(functions).nodesTaggedWithAll(XCSG.ReturnValue);
+		Q containsEdges = Common.universe().edgesTaggedWithAny(XCSG.Contains);
+		return containsEdges.forwardStep(functions).nodesTaggedWithAll(XCSG.ReturnValue);
 	}
 }

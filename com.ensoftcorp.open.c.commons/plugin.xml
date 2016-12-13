@@ -4,16 +4,16 @@
    <extension
          point="com.ensoftcorp.atlas.ui.smartViewScript">
       <script
-            class="atlas.c.smartview.ControlFlowWithinFunction">
+            class="com.ensoftcorp.open.c.commons.ui.smart.ControlFlowWithinFunctionSmartView">
       </script>
       <script
-            class="atlas.c.smartview.DataFlowWithinFunction">
+            class="com.ensoftcorp.open.c.commons.ui.smart.DataFlowWithinFunctionSmartView">
       </script>
       <script
-            class="atlas.c.smartview.MatchingPairSearchModel">
+            class="com.ensoftcorp.open.c.commons.ui.smart.MatchingPairSearchModelSmartView">
       </script>
       <script
-            class="atlas.c.smartview.Typeof">
+            class="com.ensoftcorp.open.c.commons.ui.smart.TypeOfSmartView">
       </script>
    </extension>
 </plugin>

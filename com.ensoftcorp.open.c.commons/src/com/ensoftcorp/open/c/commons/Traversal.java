@@ -1,4 +1,4 @@
-package atlas.c.xinu;
+package com.ensoftcorp.open.c.commons;
 
 import java.util.Iterator;
 
@@ -66,22 +66,19 @@ public class Traversal {
 
 			nodesInGraph.add(currentNode);
 			
-			if (stop.contains(currentNode))
+			if (stop.contains(currentNode)){
 				continue;
+			}
 			
 			AtlasSet<GraphElement> edges = graph.edges(currentNode, nodeDirection);
 
 			for (GraphElement edge : edges) {
-
 				edgesInGraph.add(edge);
-				
 				GraphElement nextNode = edge.getNode(edgeDirection);
-				
 				if (!nodesInGraph.contains(nextNode)) {
 					frontier.add(nextNode);
 				}
 			}
-			
 		}
 		
 		return new UncheckedGraph(nodesInGraph, edgesInGraph);
