@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="com.ensoftcorp.open.c.commons"
+      id="com.ensoftcorp.open.c.commons.feature.group"
       label="C Commons Toolbox"
       version="3.0.13.qualifier"
       provider-name="EnSoft Corp.">
