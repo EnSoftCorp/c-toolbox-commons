@@ -37,10 +37,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
    </license>
 
-   <url>
-      <discovery label="Atlas" url="http://download.ensoftcorp.com/atlas/eclipse"/>
-   </url>
-
    <plugin
          id="com.ensoftcorp.open.c.commons"
          download-size="0"
