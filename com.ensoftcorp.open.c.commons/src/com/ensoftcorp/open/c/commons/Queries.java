@@ -204,13 +204,13 @@ public class Queries {
 	 * @param object: type node
 	 * @return the matching pair graph for object (object)
 	 */
-	public static Q mpg(Q e1Functions, Q e2Functions, Q object){
+	public static Q mpg(Q e1Functions, Q e2Functions, Q object) {
 		Q callL = call(e1Functions);
 		Q callU = call(e2Functions);
-		if(object.eval().nodes().getFirst().tags().contains(XCSG.GlobalVariable)){
+		if (object.eval().nodes().getFirst().tags().contains(XCSG.GlobalVariable)) {
 			callL = callL.intersection(refVariable(object));
 			callU = callU.intersection(refVariable(object));
-		}else if(object.eval().nodes().getFirst().tags().contains(XCSG.C.Struct)){
+		} else if (object.eval().nodes().getFirst().tags().contains(XCSG.C.Struct)) {
 			callL = callL.intersection(refType(object));
 			callU = callU.intersection(refType(object));
 		}
@@ -341,8 +341,9 @@ public class Queries {
 		AtlasSet<GraphElement> containingFunctions = new AtlasHashSet<GraphElement>();
 		for (Node node : ns) {
 			GraphElement function = StandardQueries.getContainingFunction(node);
-			if (function != null)
+			if (function != null){
 				containingFunctions.add(function);
+			}
 		}
 		Q functions = Common.toQ(containingFunctions);
 		
@@ -353,7 +354,6 @@ public class Queries {
 		name = name.replace("*", ".*");
 		AtlasSet<Node> allFunctions = nodes.eval().nodes();
 		AtlasSet<GraphElement> result = new AtlasHashSet<GraphElement>();
-		
 		for(GraphElement fun : allFunctions){
 			String n = (String) fun.getAttr(XCSG.name);
 			if(n.matches(name)){
