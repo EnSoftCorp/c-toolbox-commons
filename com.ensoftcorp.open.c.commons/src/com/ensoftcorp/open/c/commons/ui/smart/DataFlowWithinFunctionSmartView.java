@@ -18,6 +18,7 @@ import com.ensoftcorp.atlas.ui.selection.event.IAtlasSelectionEvent;
  * The control flow edge back to the start of the loop is highlighted in blue.
  */
 public class DataFlowWithinFunctionSmartView extends FilteringAtlasSmartViewScript {
+	
 	@Override
 	public String[] getSupportedNodeTags() {
 		return new String[]{XCSG.Function};
@@ -36,7 +37,6 @@ public class DataFlowWithinFunctionSmartView extends FilteringAtlasSmartViewScri
 
 		Q res = body.nodesTaggedWithAny(XCSG.ControlFlow_Node, XCSG.DataFlow_Node, XCSG.Variable).induce(edges(XCSG.ControlFlow_Edge, XCSG.DataFlow_Edge));
 
-		
 		Highlighter h = new Highlighter();
 		h.highlightEdges(Common.edges(XCSG.ControlFlowBackEdge), Color.BLUE);
 

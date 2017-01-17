@@ -31,7 +31,6 @@ public class TypeOfSmartView extends FilteringAtlasSmartViewScript {
 
 	@Override
 	public StyledResult selectionChanged(IAtlasSelectionEvent input, Q filteredSelection) {
-		
 		Q res = Queries.typeOf(filteredSelection);
 		
 		Highlighter h = new Highlighter();
