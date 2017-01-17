@@ -1,7 +1,5 @@
 package com.ensoftcorp.open.c.commons.ui.smart;
 
-import com.ensoftcorp.atlas.core.db.graph.Node;
-import com.ensoftcorp.atlas.core.db.set.AtlasSet;
 import com.ensoftcorp.atlas.core.query.Q;
 import com.ensoftcorp.atlas.core.script.Common;
 import com.ensoftcorp.atlas.core.script.StyledResult;
@@ -11,75 +9,29 @@ import com.ensoftcorp.atlas.ui.selection.event.IAtlasSelectionEvent;
 import com.ensoftcorp.open.c.commons.Queries;
 
 /**
- * For a selected node, displays the immediate type and the basis of that type.
- *
+ * Shows a call graph restricted to a set of leaf nodes for functions that read the selected variable
  */
 public class MatchingPairSearchModelSmartView extends FilteringAtlasSmartViewScript {
 
 	/**
-	 * Function 1 of the matching pair search model
+	 * A set of leaf nodes to restrict the call graph to
 	 */
-	private static Node f1 = null;
-
-	/**
-	 * Function 2 of the matching pair search model
-	 */
-	private static Node f2 = null;
+	private static Q leaves = Common.empty();
 	
 	/**
-	 * Get function 1 of the matching pair search model
+	 * Get the leaf node restrictions
 	 * @return
 	 */
-	public static Q getF1() {
-		if(f1 == null){
-			return Common.empty();
-		} else {
-			return Common.toQ(f1);
-		}
+	public static Q getAllowedLeafNodes() {
+		return leaves;
 	}
 
 	/**
 	 * Set function 1 of the matching pair search model
 	 * @param f1
 	 */
-	public static void setF1(Q f1) {
-		if(f2 != null){
-			Q other = getF2() != null ? getF2() : Common.empty();
-			AtlasSet<Node> functions = f1.nodesTaggedWithAny(XCSG.Function).difference(other).eval().nodes();
-			if(functions.size() != 1){
-				throw new IllegalArgumentException("Expected input is a single function that is not the same as function 2");
-			} else {
-				MatchingPairSearchModelSmartView.f1 = functions.one();
-			}
-		}
-	}
-
-	/**
-	 * Get function 2 of the matching pair search model
-	 * @return
-	 */
-	public static Q getF2() {
-		if(f2 == null){
-			return Common.empty();
-		} else {
-			return Common.toQ(f2);
-		}
-	}
-
-	/**
-	 * Set function 2 of the matching pair search model
-	 * @param f2
-	 */
-	public static void setF2(Q f2) {
-		if(f2 != null){
-			Q other = getF1() != null ? getF1() : Common.empty();
-			AtlasSet<Node> functions = f2.nodesTaggedWithAny(XCSG.Function).difference(other).eval().nodes();
-			if(functions.size() != 1){
-				throw new IllegalArgumentException("Expected input is a single function that is not the same as function 1");
-			} else {
-				MatchingPairSearchModelSmartView.f2 = functions.one();
-			}
-		}
+	public static void setAllowedLeafNodes(Q leaves) {
+		MatchingPairSearchModelSmartView.leaves = leaves.nodesTaggedWithAny(XCSG.Function);
 	}
 	
 	@Override
@@ -99,19 +51,15 @@ public class MatchingPairSearchModelSmartView extends FilteringAtlasSmartViewScr
 	public StyledResult selectionChanged(IAtlasSelectionEvent input, Q filteredSelection) {
 		
 		// attempt to initialize f1,f2 to xinu example defaults
-		if(f1 == null){
-			f1 = Queries.functions("getbuf").eval().nodes().one();
-		}
-		if(f2 == null){
-			f2 = Queries.functions("freebuf").eval().nodes().one();
+		if(leaves.eval().nodes().isEmpty()){
+			leaves = Queries.functions("getbuf").union(Queries.functions("freebuf"));
 		}
 		
 		Q res = Queries.typeOf(filteredSelection);
 		Q selectedType = res.leaves();
-		Q leaves = getF1().union(getF2());
 		Q refSelectedType = Queries.ref(selectedType);
 		Q roots = refSelectedType.roots();
-		Q searchModel = Queries.graph(roots,  leaves);
+		Q searchModel = Queries.graph(roots, leaves);
 		return new StyledResult(searchModel);
 	}
 

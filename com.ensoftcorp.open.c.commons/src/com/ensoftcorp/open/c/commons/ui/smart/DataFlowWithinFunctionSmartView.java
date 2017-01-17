@@ -32,15 +32,11 @@ public class DataFlowWithinFunctionSmartView extends FilteringAtlasSmartViewScri
 	@Override
 	public StyledResult selectionChanged(IAtlasSelectionEvent input, Q filteredSelection) {
 		Q functions = filteredSelection;
-		
 		Q body = functions.contained();
-
-		Q res = body.nodesTaggedWithAny(XCSG.ControlFlow_Node, XCSG.DataFlow_Node, XCSG.Variable).induce(edges(XCSG.ControlFlow_Edge, XCSG.DataFlow_Edge));
-
+		Q result = body.nodesTaggedWithAny(XCSG.ControlFlow_Node, XCSG.DataFlow_Node, XCSG.Variable).induce(edges(XCSG.ControlFlow_Edge, XCSG.DataFlow_Edge));
 		Highlighter h = new Highlighter();
 		h.highlightEdges(Common.edges(XCSG.ControlFlowBackEdge), Color.BLUE);
-
-		return new StyledResult(res, h);
+		return new StyledResult(result, h);
 	}
 
 	@Override
