@@ -40,6 +40,8 @@ and press the `OK` button.
 | **Example&nbsp;(1)** | <p>Return the functions named "dswrite" and "dsread"</p> <p>*var funcs = functions("dswrite", "dsread")*</p> <p>*show(funcs)*</p> |
 | **Example&nbsp;(2)** | <p>Return all functions where their names start with/match "ds\*" or "dg\*"</p> <p>*var funcs = functions("ds\*", "dg\*")*</p> <p>*show(funcs)*</p> |
 
+<br />
+
 | **Function**    | globals                                                                                                                                          |
 |:-----------------|:--------------------------------------------------------------------------------------------------------------------------------------------------|
 | **Parameters**  | Parameter (names): A list of global variable names as Strings                                                                                    |
