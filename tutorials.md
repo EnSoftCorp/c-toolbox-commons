@@ -13,17 +13,17 @@ To import the C Toolbox Commons common queries on the Atlas Shell you must first
 
 2. Open the Atlas Shell Settings (by clicking on the gear icon).
 
-![Atlas Shell Settings]()
+![Atlas Shell Settings](/c-commons-toolbox/images/tutorials/shell_settings.png)
 
 3. Search for the C Toolbox Commons plugin by typing "com.ensoftcorp.open.c.commons" in the search bar. Select the plugin and click the `Add` button.
 
-![Atlas Shell Settings]()
+![Search Plugins](/c-commons-toolbox/images/tutorials/search_plugins.png)
 
-![Atlas Shell Settings]()
+![Add Plugin](/c-commons-toolbox/images/tutorials/add_plugin.png)
 
 4. Select the Initialization Script tab in the Atlas Shell Settings window. At the bottom add a new line with the contents `import com.ensoftcorp.open.c.commons.Queries._` and press the `OK` button.
 
-![Atlas Shell Settings]()
+![Import Queries Initialization](/c-commons-toolbox/images/tutorials/initialization.png)
 
 5. You can now run any of the methods in the [Queries](https://ensoftcorp.github.io/c-toolbox-commons/javadoc/index.html) class. Example usage of the queries can be found below. 
 
@@ -36,7 +36,7 @@ To import the C Toolbox Commons common queries on the Atlas Shell you must first
 | **Example&nbsp;(1)** | *Return the functions named "dswrite" and "dsread"*,                                                                                                                            |
 |                 | var funcs = functions(“dswrite”, “dsread”)                                                                                                                                      |
 |                 | show(funcs)                                                                                                                                                                     |
-| **Example&nbsp;(2)** | Return all functions where their names start with/match "ds*" or "dg*"                                                                                                          |
+| **Example&nbsp;(2)** | Return all functions where their names start with/match "ds\*" or "dg\*"                                                                                                    |
 |                 | var funcs = functions("ds\*", "dg\*")                                                                                                                                             |
 |                 | show(funcs)                                                                                                                                                                     |
 
