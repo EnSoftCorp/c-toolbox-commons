@@ -33,21 +33,61 @@ and press the `OK` button.
 
 ### Query Usage
 
-| **Function**    | *functions*                                                                                                                                                                     |
-|:-----------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Parameters**  | Parameters (functionNames): A list of function names as Strings                                                                                                                 |
-| **Description** | Returns the set of functions where their names matches the any of the names given the *functionNames* list. A (\*) in *functionNames* represents a wildcard that matches any string. |
-| **Example&nbsp;(1)** | <p>Return the functions named "dswrite" and "dsread"</p> <p>*var funcs = functions("dswrite", "dsread")*</p> <p>*show(funcs)*</p> |
-| **Example&nbsp;(2)** | <p>Return all functions where their names start with/match "ds\*" or "dg\*"</p> <p>*var funcs = functions("ds\*", "dg\*")*</p> <p>*show(funcs)*</p> |
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left"><strong>Function</strong></th>
+      <th style="text-align: left"><em>functions</em></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><strong>Parameters</strong></td>
+      <td style="text-align: left">Parameters (functionNames): A list of function names as Strings</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Description</strong></td>
+      <td style="text-align: left">Returns the set of functions where their names matches the any of the names given the <em>functionNames</em> list. A (*) in <em>functionNames</em> represents a wildcard that matches any string.</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Example&nbsp;(1)</strong></td>
+      <td style="text-align: left"><p>Return the functions named "dswrite" and "dsread"</p> <p><em>var funcs = functions("dswrite", "dsread")</em></p> <p><em>show(funcs)</em></p></td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Example&nbsp;(2)</strong></td>
+      <td style="text-align: left"><p>Return all functions where their names start with/match "ds*" or "dg*"</p> <p><em>var funcs = functions("ds*", "dg*")</em></p> <p><em>show(funcs)</em></p></td>
+    </tr>
+  </tbody>
+</table>
 
 <br />
 
-| **Function**    | globals                                                                                                                                          |
-|:-----------------|:--------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Parameters**  | Parameter (names): A list of global variable names as Strings                                                                                    |
-| **Description** | Returns the nodes representing the global variables given by the parameter *name*. A \* in *name* represents a wildcard that matches any string. |
-| **Example&nbsp;(1)** | <p>Return the global variable named "devtab"</p> <p>*var globalVar = globals("devtab")*</p><p>*show(globalVar)*</p> |
-| **Example&nbsp;(2)** | <p>Return all global variables where their names start with/match "dv\*"</p> <p>*var globalVars = globals("dv\*")*</p> <p>*show(globalVars)*</p> |
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left"><strong>Function</strong></th>
+      <th style="text-align: left">globals</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><strong>Parameters</strong></td>
+      <td style="text-align: left">Parameter (names): A list of global variable names as Strings</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Description</strong></td>
+      <td style="text-align: left">Returns the nodes representing the global variables given by the parameter <em>name</em>. A * in <em>name</em> represents a wildcard that matches any string.</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Example&nbsp;(1)</strong></td>
+      <td style="text-align: left"><p>Return the global variable named "devtab"</p> <p><em>var globalVar = globals("devtab")</em></p><p><em>show(globalVar)</em></p></td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Example&nbsp;(2)</strong></td>
+      <td style="text-align: left"><p>Return all global variables where their names start with/match "dv*"</p> <p><em>var globalVars = globals("dv*")</em></p> <p><em>show(globalVars)</em></p></td>
+    </tr>
+  </tbody>
+</table>
 
 ## C Toolbox Commons Smart Views
 To open the C Toolbox Commons Smart Views open the Atlas Smart Views window by navigating to `Atlas` &gt; `Open Atlas Smart View`. The C Toolbox Commons project contributes smart views which are accessible from the dropdown menu in the bottom left of the smart view window.
