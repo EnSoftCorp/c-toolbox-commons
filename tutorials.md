@@ -89,6 +89,32 @@ and press the `OK` button.
   </tbody>
 </table>
 
+<br />
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left"><strong>Function</strong></th>
+      <th style="text-align: left">ref</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><strong>Parameters</strong></td>
+      <td style="text-align: left">Parameter (object): the set of global variables and/or types</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Description</strong></td>
+      <td style="text-align: left">Returns the set of functions referencing (read/write) the given global variables and/or types (structures) given in parameter (object).</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>Example</strong></td>
+      <td style="text-align: left"><p>Return all functions referencing the structures/types "dreq", "epacket"</p> <p><em>var refFuncs = ref(ts)</em></p>
+<p><em>show(refFuncs)</em></p></td>
+    </tr>
+  </tbody>
+</table>
+
 ## C Toolbox Commons Smart Views
 To open the C Toolbox Commons Smart Views open the Atlas Smart Views window by navigating to `Atlas` &gt; `Open Atlas Smart View`. The C Toolbox Commons project contributes smart views which are accessible from the dropdown menu in the bottom left of the smart view window.
 
