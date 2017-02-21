@@ -15,3 +15,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: com.ensoftcorp.open.c.commons,
  com.ensoftcorp.open.c.commons.ui.smart
 Bundle-ActivationPolicy: lazy
+Bundle-Name: C Toolbox Commons
+Bundle-Vendor: EnSoft Corp.
