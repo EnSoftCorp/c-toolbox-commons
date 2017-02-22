@@ -2,8 +2,8 @@ package com.ensoftcorp.open.c.commons;
 
 import java.util.Iterator;
 
+import com.ensoftcorp.atlas.core.db.graph.Edge;
 import com.ensoftcorp.atlas.core.db.graph.Graph;
-import com.ensoftcorp.atlas.core.db.graph.GraphElement;
 import com.ensoftcorp.atlas.core.db.graph.GraphElement.EdgeDirection;
 import com.ensoftcorp.atlas.core.db.graph.GraphElement.NodeDirection;
 import com.ensoftcorp.atlas.core.db.graph.Node;
@@ -53,32 +53,35 @@ public class Traversal {
 		final NodeDirection nodeDirection = (direction == TraversalDirection.REVERSE) ? NodeDirection.IN : NodeDirection.OUT;
 		final EdgeDirection edgeDirection = (direction == TraversalDirection.REVERSE) ? EdgeDirection.FROM : EdgeDirection.TO;
 		
-		AtlasHashSet<GraphElement> nodesInGraph = new AtlasHashSet<GraphElement>();
-		AtlasHashSet<GraphElement> edgesInGraph = new AtlasHashSet<GraphElement>();
+		AtlasHashSet<Node> nodesInGraph = new AtlasHashSet<>();
+		AtlasHashSet<Edge> edgesInGraph = new AtlasHashSet<>();
 
-		AtlasHashSet<GraphElement> frontier = new AtlasHashSet<GraphElement>();
-		frontier.addAll(new IntersectionSet<GraphElement>(graph.nodes(), origin));
+		AtlasHashSet<Node> frontier = new AtlasHashSet<>();
+		frontier.addAll(new IntersectionSet<Node>(graph.nodes(), origin));
 		
 		while (!frontier.isEmpty()) {
-			Iterator<GraphElement> itr = frontier.iterator();
-			GraphElement currentNode = itr.next();
+			Iterator<Node> itr = frontier.iterator();
+			Node currentNode = itr.next();
 			itr.remove();
 
 			nodesInGraph.add(currentNode);
 			
-			if (stop.contains(currentNode)){
+			if (stop.contains(currentNode))
 				continue;
-			}
 			
-			AtlasSet<GraphElement> edges = graph.edges(currentNode, nodeDirection);
+			AtlasSet<Edge> edges = graph.edges(currentNode, nodeDirection);
 
-			for (GraphElement edge : edges) {
+			for (Edge edge : edges) {
+
 				edgesInGraph.add(edge);
-				GraphElement nextNode = edge.getNode(edgeDirection);
+				
+				Node nextNode = edge.getNode(edgeDirection);
+				
 				if (!nodesInGraph.contains(nextNode)) {
 					frontier.add(nextNode);
 				}
 			}
+			
 		}
 		
 		return new UncheckedGraph(nodesInGraph, edgesInGraph);
