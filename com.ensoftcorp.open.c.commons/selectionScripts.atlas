@@ -1,0 +1,4 @@
+com.ensoftcorp.open.c.commons.ui.smart.ControlFlowWithinFunctionSmartView
+com.ensoftcorp.open.c.commons.ui.smart.DataFlowWithinFunctionSmartView
+com.ensoftcorp.open.c.commons.ui.smart.TypeOfSmartView
+com.ensoftcorp.open.c.commons.ui.smart.MatchingPairSearchModelSmartView
