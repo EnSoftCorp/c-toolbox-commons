@@ -1,15 +1,17 @@
 package com.ensoftcorp.open.c.commons.ui.smart;
 
+
+import com.ensoftcorp.atlas.core.xcsg.XCSG;
 import com.ensoftcorp.atlas.core.query.Q;
 import com.ensoftcorp.atlas.core.script.Common;
 import com.ensoftcorp.atlas.core.script.StyledResult;
-import com.ensoftcorp.atlas.core.xcsg.XCSG;
 import com.ensoftcorp.atlas.ui.scripts.selections.FilteringAtlasSmartViewScript;
 import com.ensoftcorp.atlas.ui.selection.event.IAtlasSelectionEvent;
 import com.ensoftcorp.open.c.commons.Queries;
-
 /**
- * Shows a call graph restricted to a set of leaf nodes for functions that read the selected variable
+ * For a selected global variable or struct node, displays the Matching Pair Search Model
+ * with respect to preset Functions, by default getbuf and freebuf (for XINU).
+ *
  */
 public class MatchingPairSearchModelSmartView extends FilteringAtlasSmartViewScript {
 

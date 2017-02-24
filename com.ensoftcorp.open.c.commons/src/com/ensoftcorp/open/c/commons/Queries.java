@@ -1,23 +1,41 @@
 package com.ensoftcorp.open.c.commons;
 
+import static com.ensoftcorp.atlas.core.script.Common.codemap;
+import static com.ensoftcorp.atlas.core.script.Common.universe;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.eclipse.core.runtime.IPath;
+
 import com.ensoftcorp.atlas.core.db.graph.Graph;
 import com.ensoftcorp.atlas.core.db.graph.GraphElement;
 import com.ensoftcorp.atlas.core.db.graph.Node;
 import com.ensoftcorp.atlas.core.db.set.AtlasHashSet;
 import com.ensoftcorp.atlas.core.db.set.AtlasSet;
+import com.ensoftcorp.atlas.core.index.common.SourceCorrespondence;
 import com.ensoftcorp.atlas.core.query.Q;
-import com.ensoftcorp.atlas.core.script.Common;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
 import com.ensoftcorp.open.commons.analysis.StandardQueries;
+import com.ensoftcorp.atlas.core.script.Common;
 
 public class Queries {
+	
+	/**
+	 * Filter for edges in the code map
+	 * @param tags
+	 * @return
+	 */
+	private static Q edges(String ... tags) {
+		return Common.codemap().edges(tags);
+	}
 	
 	/**
 	 * Filter ignoring all edges other than XCSG.Call edges.
 	 * @return
 	 */
 	public static Q callEdges() {
-		return Common.universe().edgesTaggedWithAny(XCSG.Call);
+		return edges(XCSG.Call);
 	}
 	
 	/**
@@ -26,22 +44,13 @@ public class Queries {
 	 * @return
 	 */
 	public static Q typeEdges() {
-		Q typeEdges = Common.edges(XCSG.TypeOf, // from Variable or DataFlow_Node to a Type
+		Q typeEdges = edges(XCSG.TypeOf, // from Variable or DataFlow_Node to a Type
 				XCSG.ArrayElementType, // arrays have an ArrayElementType
 				XCSG.ReferencedType, // pointers have a ReferencedType
 				XCSG.AliasedType,  // typedefs have an AliasedType
 				XCSG.C.CompletedBy // OpaqueTypes are connected to the corresponding Type 
 				);
 		return typeEdges;
-	}
-	
-	/**
-	 * Returns the set of functions where their names match the given (functionName). A (*) in (functionName) represents a wildcard that matches any string.
-	 * @param functionName: The function name as a String
-	 * @return A set of functions
-	 */
-	public static Q function(String functionName) {
-		return findByName(functionName, XCSG.Function); 
 	}
 
 	/**
@@ -50,56 +59,49 @@ public class Queries {
 	 * @return A set of functions
 	 */
 	public static Q functions(String... functionNames){
-		Q functions = Common.empty();
-		for(String n : functionNames){
-			functions = functions.union(function(n));
-		}
-		return functions;
+		return find(XCSG.Function, functionNames);
 	}
 
 	/**
-	 * Returns the nodes representing the global variables given by the parameter (name). A (*) in (name) represents a wildcard that matches any string.
-	 * @param name: The global variable name as a String
-	 * @return A set of global variable nodes
-	 */
-	public static Q global(String name){
-		return findByName(name, XCSG.GlobalVariable);
-	}
-	
-	/**
-	 * Returns the nodes representing the globa variable(s) given by the parameter list (names). A (*) in any string in the list (names) represents a wildcard that matches any string.
+	 * Returns the nodes representing the global variable(s) given by the parameter list (names). A (*) in any string in the list (names) represents a wildcard that matches any string.
 	 * @param names: A list of global variable names as Strings
 	 * @return A set of global variable nodes
 	 */
 	public static Q globals(String... names){
-		Q ts = Common.empty();
-		for(String n : names){
-			ts = ts.union(global(n));
-		}
-		return ts;
+		return find(XCSG.GlobalVariable, names);
+	}
+
+	/**
+	 * Returns the nodes representing the types given by the names. 
+	 * A (*) is a wildcard that matches any string.
+	 * @param names A list of type names; structs must be prefixed with "struct "
+	 * @return A set of global variable nodes
+	 */
+	public static Q types(String... names){
+		return find(XCSG.Type, names);
 	}
 	
 	/**
-	 * Returns the nodes representing the Struct given by the parameter (name). A (*) in (name) represents a wildcard that matches any string.
+	 * Returns the nodes representing the structs having the given names. 
+	 * <p>
+	 * The name is automatically prefixed with "struct ".
+	 * A (*) in name represents a wildcard that matches any string.
+	 * <p>
+	 * Examples:
+	 * <ul>
+	 * <li> structs("iblk")
+	 * <li> structs("*bl*k*")
+	 * <li> structs("pentry","bpool")
+	 * </ul>
 	 * 
-	 * @param name the struct name, without the prefix "struct "
+	 * @param names list of struct names
 	 * @return XCSG.C.Struct nodes
 	 */
-	public static Q Type(String name){
-		return findByName("struct " + name, XCSG.C.Struct);
-	}
-	
-	/**
-	 * Returns the nodes representing the Structs having the given names. A (*) in any string in the list (names) represents a wildcard that matches any string.
-	 * 
-	 * @see #type(String)
-	 * @param names list of Struct names
-	 * @return XCSG.C.Struct nodes
-	 */
-	public static Q Types(String... names){
+	public static Q structs(String... names){
 		Q ts = Common.empty();
 		for(String n : names){
-			ts = ts.union(Type(n));
+			Q s = findByName("struct " + n, XCSG.C.Struct);
+			ts = ts.union(s);
 		}
 		return ts;
 	}
@@ -110,8 +112,8 @@ public class Queries {
 	 * @return A set of type/structure/global variable nodes
 	 */
 	public static Q ref(Q object){
-		Q refV = refVariable(object.nodesTaggedWithAny(XCSG.GlobalVariable));
-		Q refT = refType(object.nodesTaggedWithAny(XCSG.C.Struct));
+		Q refV = refVariable(object.nodes(XCSG.GlobalVariable));
+		Q refT = refType(object.nodes(XCSG.C.Struct));
 		return refV.union(refT);
 	}
 	
@@ -121,7 +123,7 @@ public class Queries {
 	 * @return the CFG of the given function
 	 */
 	public static Q cfg(String funcName){
-		return cfg(function(funcName));
+		return cfg(functions(funcName));
 	}
 	
 	/**
@@ -130,8 +132,7 @@ public class Queries {
 	 * @return the CFG of the given function(s)
 	 */
 	public static Q cfg(Q funcs){
-		Q controlFlowEdges = Common.universe().edgesTaggedWithAny(XCSG.ControlFlow_Edge);
-		return funcs.contained().nodesTaggedWithAny(XCSG.ControlFlow_Node).induce(controlFlowEdges);
+		return funcs.contained().nodes(XCSG.ControlFlow_Node).induce(edges(XCSG.ControlFlow_Edge));
 	}
 	
 	/**
@@ -193,8 +194,7 @@ public class Queries {
 	 * @param nodes: control-flow node(s)
 	 */
 	public static Q inducecfg(Q nodes){
-		Q controlFlowEdges = Common.universe().edgesTaggedWithAny(XCSG.ControlFlow_Edge);
-		return nodes.induce(controlFlowEdges);
+		return nodes.induce(edges(XCSG.ControlFlow_Edge));
 	}
 	
 	/**
@@ -204,13 +204,13 @@ public class Queries {
 	 * @param object: type node
 	 * @return the matching pair graph for object (object)
 	 */
-	public static Q mpg(Q e1Functions, Q e2Functions, Q object) {
+	public static Q mpg(Q e1Functions, Q e2Functions, Q object){
 		Q callL = call(e1Functions);
 		Q callU = call(e2Functions);
-		if (object.eval().nodes().getFirst().tags().contains(XCSG.GlobalVariable)) {
+		if(object.eval().nodes().one().taggedWith(XCSG.GlobalVariable)){
 			callL = callL.intersection(refVariable(object));
 			callU = callU.intersection(refVariable(object));
-		} else if (object.eval().nodes().getFirst().tags().contains(XCSG.C.Struct)) {
+		}else if(object.eval().nodes().one().taggedWith(XCSG.C.Struct)){
 			callL = callL.intersection(refType(object));
 			callU = callU.intersection(refType(object));
 		}
@@ -238,17 +238,19 @@ public class Queries {
 	 * @return intra-procedural data-flow graph
 	 */
 	public static Q projectdfg(Q dfg, Q func){
-		return func.contained().induce(Common.universe()).intersection(dfg);
+		Q functionBody = func.contained().induce(universe());
+		return functionBody.intersection(dfg);
 	}
 	
 	/**
 	 * Returns the intra-procedural forward data-flow graph starting at the given node
-	 * @param node where the forward slice starts
+	 * within the projection
+	 * @param projection data-flow graph
+	 * @param node where the flow starts
 	 * @return a forward data-flow graph from the selected node
 	 */
-	public static Q forwardSlice(Q node){
-		Q localDataFlowEdges = Common.universe().edgesTaggedWithAny(XCSG.LocalDataFlow);
-		return localDataFlowEdges.forward(node);
+	public static Q forwardProjection(Q projection, Q node){
+		return projection.forward(node);
 	}
 	
 	/**
@@ -263,18 +265,17 @@ public class Queries {
 	 * </code>
 	 * 
 	 * @param functionContext caller of functionSource
-	 * @param functionSourceName return value to use as origin in data-flow graph
+	 * @param functionSource return value to use as origin in data-flow graph
 	 * @param functionSink stopping point for data-flow graph
 	 */
-	public static Q dfg(String functionContext, String functionSourceName, String functionSink) {
+	public static Q dfg(String functionContext, String functionSource, String functionSink) {
 		// find CallSites to "functionSource" within "functionContext"
-		Q functionSource = function(functionSourceName);
-		Q invokedFunctionEdges = Common.universe().edgesTaggedWithAny(XCSG.InvokedFunction);
-		Q callSites = invokedFunctionEdges.predecessors(functionSource);
-		Q callSitesInFunction = function(functionContext).contained().intersection(callSites);
+		Q qFunctionSource = functions(functionSource);
+		Q callSites = edges(XCSG.InvokedFunction).predecessors(qFunctionSource);
+		Q callSitesInFunction = functions(functionContext).contained().intersection(callSites);
 
 		// take the contents of "functionSink" as the stopping point for flows
-		Q functionSinkParameters = function(functionSink).contained();
+		Q functionSinkParameters = functions(functionSink).contained();
 		
 		AtlasSet<Node> origin = callSitesInFunction.eval().nodes();
 		AtlasSet<Node> stop = functionSinkParameters.eval().nodes();
@@ -285,20 +286,84 @@ public class Queries {
 	}
 	
 
+	/**
+	 * Returns Types, GlobalVariables, Functions, and Macros
+	 * with source correspondence matching the given path.
+	 * 
+	 * Wildcards are allowed.
+	 * Paths are always normalized to use / as a directory separator.
+	 * Paths are always assumed to start with a wildcard (to avoid needing to 
+	 * include the full project path).
+	 * <p>
+	 * Examples:
+	 * <ul>
+	 * <li> file("open.c")  -- any file ending with open.c
+	 * <li> file("/open.c")  -- exactly files named open.c
+	 * <li> file("/dg*.c")  -- any file starting with dg and ending with .c
+	 * </ul>
+	 * 
+	 * @param path 
+	 * @return
+	 */
+	public static Q file(String path) {
+		
+		Q entities = Common.codemap().nodes(
+				XCSG.Type,
+				XCSG.TypeAlias,
+				XCSG.GlobalVariable,
+				XCSG.Function,
+				XCSG.C.Provisional.Macro);
+		
+		String regex = ".*" + path.replace("*", ".*");
+		Pattern pattern = Pattern.compile(regex);
+		
+		AtlasSet<Node> matches = new AtlasHashSet<>();
+		for (Node entity : entities.eval().nodes()) {
+			if (scMatches(entity,pattern)) matches.add(entity);
+		}
+		
+		return Common.toQ(matches);
+	}
+
 	/******************************************************************/
 	/******************************************************************/
 	/*                   Utility Functions Below                      */ 
 	/******************************************************************/
 	/******************************************************************/
 	
+	private static Q find(String tag, String... names) {
+		Q ts = Common.empty();
+		for(String n : names){
+			ts = ts.union(findByName(n, tag));
+		}
+		return ts;
+	}
+
 	private static Q findByName(String functionName, String tag) {
 		if(functionName.indexOf("*") >= 0){
-			Q nodes = Common.universe().nodesTaggedWithAll(tag);
+			Q nodes = codemap().nodes(tag);
 			Q result = getMatches(functionName, nodes);
 			return result;
 		}
 		// Atlas has an index over literal attribute values, so it's faster to query directly
-		return Common.universe().nodesTaggedWithAll(tag).selectNode(XCSG.name, functionName);
+		return codemap().nodes(tag).selectNode(XCSG.name, functionName);
+	}
+
+	/**
+	 * tests source correspondence path
+	 * @param n
+	 * @param pattern
+	 * @return true if sourceCorrespondence file path matches
+	 */
+	private static boolean scMatches(Node n, Pattern pattern) {
+		SourceCorrespondence sc = (SourceCorrespondence) n.getAttr(XCSG.sourceCorrespondence);
+		if (sc == null) return false;
+		
+		IPath fullPath = sc.sourceFile.getFullPath();
+		String path = fullPath.toOSString();
+	
+		Matcher matcher = pattern.matcher(path);
+		return matcher.matches();
 	}
 
 	/**
@@ -312,7 +377,7 @@ public class Queries {
 	private static Q refType(Q type){
 		Q ref = typeEdges().reverse(type);
 		ref = Common.extend(ref, XCSG.Contains);
-		return ref.nodesTaggedWithAll(XCSG.Function).induce(callEdges());
+		return ref.nodes(XCSG.Function).induce(callEdges());
 	}
 	
 	/**
@@ -322,11 +387,11 @@ public class Queries {
 	 * @return the induced Call Graph
 	 */
 	private static Q refVariable(Q variable){
-		Q read =  Common.universe().edgesTaggedWithAny(XCSG.Reads).reverseStep(variable);
-		Q write = Common.universe().edgesTaggedWithAll(XCSG.Writes).reverseStep(variable);
+		Q read =  edges(XCSG.Reads).reverseStep(variable);
+		Q write = edges(XCSG.Writes).reverseStep(variable);
 		Q all = read.union(write);
 		all = Common.extend(all, XCSG.Contains);
-		return all.nodesTaggedWithAll(XCSG.Function).induce(callEdges());
+		return all.nodes(XCSG.Function).induce(callEdges());
 	}
 	
 	/**
@@ -338,26 +403,33 @@ public class Queries {
 	 */
 	public static Q getContainingFunction(Q nodes) {
 		AtlasSet<Node> ns = nodes.eval().nodes();
-		AtlasSet<GraphElement> containingFunctions = new AtlasHashSet<GraphElement>();
+		AtlasSet<Node> containingFunctions = new AtlasHashSet<>();
 		for (Node node : ns) {
-			GraphElement function = StandardQueries.getContainingFunction(node);
-			if (function != null){
+			Node function = StandardQueries.getContainingFunction(node);
+			if (function != null)
 				containingFunctions.add(function);
-			}
 		}
-		Q functions = Common.toQ(containingFunctions);
+		Q functions = Common.toQ(Common.toGraph(containingFunctions));
 		
 		return functions;
 	}
 
+	/**
+	 * Returns all nodes with a name matching the wildcard expression
+	 * 
+	 * @param name
+	 * @param nodes
+	 * @return
+	 */
 	private static Q getMatches(String name, Q nodes){
 		name = name.replace("*", ".*");
-		AtlasSet<Node> allFunctions = nodes.eval().nodes();
+		AtlasSet<Node> allNodes = nodes.eval().nodes();
 		AtlasSet<GraphElement> result = new AtlasHashSet<GraphElement>();
-		for(GraphElement fun : allFunctions){
-			String n = (String) fun.getAttr(XCSG.name);
-			if(n.matches(name)){
-				result.add(fun);
+		
+		for(GraphElement node : allNodes){
+			String thisName = (String) node.getAttr(XCSG.name);
+			if(thisName.matches(name)){
+				result.add(node);
 			}
 		}
 		return Common.toQ(Common.toGraph(result));
@@ -373,9 +445,15 @@ public class Queries {
 		return q.forwardOn(typeEdges());
 	}
 	
+	/**
+	 * Selects all functions, and one step of data flow for
+	 * the capture of the address of a function.
+	 * 
+	 * @return
+	 */
 	public static Q functionPtr(){
-		Q dataFlowEdges = Common.universe().edgesTaggedWithAll(XCSG.DataFlow_Edge);
-		Q functions = functions("*");
+		Q dataFlowEdges = edges(XCSG.DataFlow_Edge);
+		Q functions = Common.codemap().nodes(XCSG.Function);
 		return dataFlowEdges.forwardStep(functions);
 	}
 	
@@ -385,7 +463,6 @@ public class Queries {
 	 * @return The call site nodes
 	 */
 	public static Q functionReturn(Q functions) {
-		Q containsEdges = Common.universe().edgesTaggedWithAny(XCSG.Contains);
-		return containsEdges.forwardStep(functions).nodesTaggedWithAll(XCSG.ReturnValue);
+		return functions.children().nodes(XCSG.ReturnValue);
 	}
 }
