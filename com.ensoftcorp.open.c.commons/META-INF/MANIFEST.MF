@@ -13,6 +13,7 @@ Require-Bundle: org.eclipse.core.runtime,
  com.ensoftcorp.open.commons;bundle-version="3.0.15"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: com.ensoftcorp.open.c.commons,
+ com.ensoftcorp.open.c.commons.analysis,
  com.ensoftcorp.open.c.commons.ui.smart
 Bundle-ActivationPolicy: lazy
 Bundle-Name: C Toolbox Commons
