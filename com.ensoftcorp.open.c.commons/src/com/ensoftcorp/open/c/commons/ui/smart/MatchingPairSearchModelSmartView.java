@@ -1,16 +1,18 @@
 package com.ensoftcorp.open.c.commons.ui.smart;
 
 
-import com.ensoftcorp.atlas.core.xcsg.XCSG;
 import com.ensoftcorp.atlas.core.query.Q;
 import com.ensoftcorp.atlas.core.script.Common;
 import com.ensoftcorp.atlas.core.script.StyledResult;
+import com.ensoftcorp.atlas.core.xcsg.XCSG;
 import com.ensoftcorp.atlas.ui.scripts.selections.FilteringAtlasSmartViewScript;
 import com.ensoftcorp.atlas.ui.selection.event.IAtlasSelectionEvent;
-import com.ensoftcorp.open.c.commons.Queries;
+import com.ensoftcorp.open.c.commons.analysis.CommonQueries;
+
 /**
- * For a selected global variable or struct node, displays the Matching Pair Search Model
- * with respect to preset Functions, by default getbuf and freebuf (for XINU).
+ * For a selected global variable or struct node, displays the Matching Pair
+ * Search Model with respect to preset Functions, by default getbuf and freebuf
+ * (for XINU).
  *
  */
 public class MatchingPairSearchModelSmartView extends FilteringAtlasSmartViewScript {
@@ -54,14 +56,14 @@ public class MatchingPairSearchModelSmartView extends FilteringAtlasSmartViewScr
 		
 		// attempt to initialize f1,f2 to xinu example defaults
 		if(leaves.eval().nodes().isEmpty()){
-			leaves = Queries.functions("getbuf").union(Queries.functions("freebuf"));
+			leaves = CommonQueries.functions("getbuf").union(CommonQueries.functions("freebuf"));
 		}
 		
-		Q res = Queries.typeOf(filteredSelection);
+		Q res = CommonQueries.typeOf(filteredSelection);
 		Q selectedType = res.leaves();
-		Q refSelectedType = Queries.ref(selectedType);
+		Q refSelectedType = CommonQueries.ref(selectedType);
 		Q roots = refSelectedType.roots();
-		Q searchModel = Queries.graph(roots, leaves);
+		Q searchModel = CommonQueries.graph(roots, leaves);
 		return new StyledResult(searchModel);
 	}
 

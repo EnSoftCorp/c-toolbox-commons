@@ -1,8 +1,6 @@
 package com.ensoftcorp.open.c.commons.analysis;
 
 import com.ensoftcorp.atlas.core.query.Q;
-import com.ensoftcorp.atlas.core.script.Common;
-import com.ensoftcorp.atlas.core.xcsg.XCSG;
 
 /**
  * Common set definitions which are useful for program analysis
