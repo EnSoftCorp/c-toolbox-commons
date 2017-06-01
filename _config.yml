@@ -6,7 +6,7 @@
 name: C Toolbox Commons
 
 # Short bio or description (displayed in the header)
-description: A collection of analysis utilities for analyzing C programs
+description: A collection of utilities for analyzing C programs
 
 # URL of your avatar or profile pic (you could use your GitHub profile pic)
 avatar: https://ensoftcorp.github.io/c-toolbox-commons/images/toolbox.png
