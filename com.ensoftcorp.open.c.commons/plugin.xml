@@ -18,4 +18,10 @@
             class="com.ensoftcorp.open.c.commons.ui.smart.TypeOfSmartView">
       </script>
    </extension>
+   
+   <!-- adds language specific analyses -->
+   <extension point="com.ensoftcorp.open.commons.language.analysis">
+      <language-specific-analysis class="com.ensoftcorp.open.c.commons.analysis.CallSiteAnalysis"></language-specific-analysis>
+   </extension>
+   
 </plugin>
