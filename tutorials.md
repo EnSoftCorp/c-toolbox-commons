@@ -23,7 +23,7 @@ To import the C Toolbox Commons common queries on the Atlas Shell you must first
 
 - Select the Initialization Script tab in the Atlas Shell Settings window. At the bottom add a new line with the contents
 
-      import com.ensoftcorp.open.c.commons.Queries._
+      import com.ensoftcorp.open.c.commons.analysis.CommonQueries._
 
 and press the `OK` button.
 
