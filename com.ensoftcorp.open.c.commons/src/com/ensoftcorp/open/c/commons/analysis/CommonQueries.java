@@ -399,7 +399,7 @@ public final class CommonQueries {
 	}
 	
 	/**
-	 * Everything declared under the given functions, but NOT declared under
+	 * All nodes declared under the given functions, but NOT declared under
 	 * additional functions or types. Retrieves declarations of only this function.
 	 * Results are only returned if they are within the given context.
 	 * 
@@ -411,7 +411,7 @@ public final class CommonQueries {
 	}
 
 	/**
-	 * Everything declared under the given functions, but NOT declared under
+	 * All nodes declared under the given functions, but NOT declared under
 	 * additional functions or types. Retrieves declarations of only this function.
 	 * Results are only returned if they are within the given context.
 	 * 
