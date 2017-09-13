@@ -1170,14 +1170,6 @@ public final class CommonQueries {
 	/*                   Utility Functions Below                      */ 
 	/******************************************************************/
 	/******************************************************************/
-	
-	private static Q find(String tag, String... names) {
-		Q ts = Common.empty();
-		for(String n : names){
-			ts = ts.union(findByName(n, tag));
-		}
-		return ts;
-	}
 
 	private static Q findByName(String functionName, String tag) {
 		if(functionName.indexOf("*") >= 0){
@@ -1306,6 +1298,7 @@ public final class CommonQueries {
 		return Common.codemap().edges(tags);
 	}
 	
+	@SuppressWarnings("unused")
 	private static class Traversal {
 		
 		public static Graph reverseDF(AtlasSet<Node> origin) {
@@ -1356,17 +1349,15 @@ public final class CommonQueries {
 
 				nodesInGraph.add(currentNode);
 				
-				if (stop.contains(currentNode))
+				if (stop.contains(currentNode)){
 					continue;
+				}
 				
 				AtlasSet<Edge> edges = graph.edges(currentNode, nodeDirection);
 
 				for (Edge edge : edges) {
-
 					edgesInGraph.add(edge);
-					
 					Node nextNode = edge.getNode(edgeDirection);
-					
 					if (!nodesInGraph.contains(nextNode)) {
 						frontier.add(nextNode);
 					}

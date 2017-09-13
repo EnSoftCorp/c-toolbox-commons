@@ -32,7 +32,7 @@ public class CallSiteAnalysis extends LanguageSpecificCallSiteAnalysis {
 	 */
 	public static AtlasSet<Node> getInvokedFunction(AtlasSet<Node> callsites) {
 		AtlasSet<Node> functions = new AtlasHashSet<Node>();
-		for(Node callsite : callsites){
+		for(@SuppressWarnings("unused") Node callsite : callsites){
 			functions.add(getInvokedFunction(callsites));
 		}
 		return functions;
@@ -63,7 +63,7 @@ public class CallSiteAnalysis extends LanguageSpecificCallSiteAnalysis {
 	 */
 	public static AtlasSet<Node> getFunctionInvocations(AtlasSet<Node> functions) {
 		AtlasSet<Node> invocations = new AtlasHashSet<Node>();
-		for(Node function : functions){
+		for(@SuppressWarnings("unused") Node function : functions){
 			invocations.add(getFunctionInvocations(functions));
 		}
 		return invocations;
