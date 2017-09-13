@@ -21,6 +21,10 @@ If you want to install from source for bleeding edge changes, first grab a copy 
 ## Changelog
 Note that version numbers are based off [Atlas](http://www.ensoftcorp.com/atlas/download/) version numbers.
 
+### 3.1.7
+- Updated dependencies
+- Embedded javadoc with plugin
+
 ### 3.1.6
 - Improvements to call site analysis
 - Refactoring for common queries
