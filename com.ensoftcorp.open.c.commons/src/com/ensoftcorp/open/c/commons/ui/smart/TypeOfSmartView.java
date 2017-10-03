@@ -13,7 +13,6 @@ import com.ensoftcorp.open.c.commons.analysis.CommonQueries;
 
 /**
  * For a selected node, displays the immediate type and the basis of that type.
- *
  */
 public class TypeOfSmartView extends FilteringAtlasSmartViewScript {
 

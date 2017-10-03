@@ -1,7 +1,5 @@
 package com.ensoftcorp.open.c.commons.ui.smart;
 
-import static com.ensoftcorp.atlas.core.script.Common.edges;
-
 import java.awt.Color;
 
 import com.ensoftcorp.atlas.core.markup.Markup;
@@ -12,6 +10,7 @@ import com.ensoftcorp.atlas.core.script.StyledResult;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
 import com.ensoftcorp.atlas.ui.scripts.selections.FilteringAtlasSmartViewScript;
 import com.ensoftcorp.atlas.ui.selection.event.IAtlasSelectionEvent;
+import com.ensoftcorp.open.commons.analysis.CommonQueries;
 
 /**
  * For a selected function, displays the data flow graph embedded in the control
@@ -32,10 +31,8 @@ public class DataFlowWithinFunctionSmartView extends FilteringAtlasSmartViewScri
 	@Override
 	public StyledResult selectionChanged(IAtlasSelectionEvent input, Q filteredSelection) {
 		Q functions = filteredSelection;
-		
-		Q body = functions.contained();
 
-		Q result = body.nodesTaggedWithAny(XCSG.ControlFlow_Node, XCSG.DataFlow_Node, XCSG.Variable).induce(edges(XCSG.ControlFlow_Edge, XCSG.DataFlow_Edge));
+		Q result = CommonQueries.dfg(functions).union(CommonQueries.cfg(functions));
 		
 		Markup m = new Markup();
 		m.setEdge(Common.codemap().edges(XCSG.ControlFlowBackEdge), MarkupProperty.EDGE_COLOR, Color.BLUE);
