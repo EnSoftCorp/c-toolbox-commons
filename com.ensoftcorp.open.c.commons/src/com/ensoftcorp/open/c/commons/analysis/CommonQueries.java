@@ -501,10 +501,28 @@ public final class CommonQueries {
 	/**
 	 * 
 	 * @param functions
+	 * @return the data flow graph under the function
+	 */
+	public static Q dfg(Q functions) {
+		return localDeclarations(functions).nodes(XCSG.DataFlow_Node).induce(Common.edges(XCSG.DataFlow_Edge));
+	}
+	
+	/**
+	 * 
+	 * @param function
+	 * @return the data flow graph under the function
+	 */
+	public static Q dfg(Node function) {
+		return dfg(Common.toQ(function));
+	}
+	
+	/**
+	 * 
+	 * @param functions
 	 * @return the control flow graph under the function
 	 */
 	public static Q cfg(Q functions) {
-		return com.ensoftcorp.open.commons.analysis.CommonQueries.cfg(functions);
+		return com.ensoftcorp.atlas.core.script.CommonQueries.cfg(functions);
 	}
 	
 	/**
@@ -513,7 +531,7 @@ public final class CommonQueries {
 	 * @return the control flow graph under the function
 	 */
 	public static Q cfg(Node function) {
-		return com.ensoftcorp.open.commons.analysis.CommonQueries.cfg(function);
+		return cfg(Common.toQ(function));
 	}
 	
 	/**
@@ -522,7 +540,7 @@ public final class CommonQueries {
 	 * @return the control flow graph (including exceptional control flow) under the function
 	 */
 	public static Q excfg(Q functions) {
-		return com.ensoftcorp.open.commons.analysis.CommonQueries.cfg(functions);
+		return com.ensoftcorp.atlas.core.script.CommonQueries.excfg(functions);
 	}
 	
 	/**
@@ -531,7 +549,7 @@ public final class CommonQueries {
 	 * @return the control flow graph (including exceptional control flow) under the function
 	 */
 	public static Q excfg(Node function) {
-		return com.ensoftcorp.open.commons.analysis.CommonQueries.cfg(function);
+		return excfg(Common.toQ(function));
 	}
 
 	/**
