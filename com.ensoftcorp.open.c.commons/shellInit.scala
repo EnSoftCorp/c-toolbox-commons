@@ -18,4 +18,5 @@ import com.ensoftcorp.atlas.core.db.graph.Graph
 import com.ensoftcorp.atlas.core.highlight.Highlighter
 import com.ensoftcorp.atlas.core.highlight.H
 
-import com.ensoftcorp.open.c.commons.Queries._
+import com.ensoftcorp.open.c.commons.analysis.CommonQueries
+import com.ensoftcorp.open.c.commons.analysis.CommonQueries._
