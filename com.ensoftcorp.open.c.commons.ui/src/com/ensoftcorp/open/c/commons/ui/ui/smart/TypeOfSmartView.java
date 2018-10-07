@@ -1,4 +1,4 @@
-package com.ensoftcorp.open.c.commons.ui.smart;
+package com.ensoftcorp.open.c.commons.ui.ui.smart;
 
 import java.awt.Color;
 
@@ -31,7 +31,6 @@ public class TypeOfSmartView extends FilteringAtlasSmartViewScript {
 
 	@Override
 	public StyledResult selectionChanged(IAtlasSelectionEvent input, Q filteredSelection) {
-		
 		Q res = CommonQueries.typeOf(filteredSelection);
 		
 		Markup m = new Markup();

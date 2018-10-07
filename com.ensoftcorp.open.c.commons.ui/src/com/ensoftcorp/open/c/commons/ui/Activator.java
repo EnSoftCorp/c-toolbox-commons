@@ -1,4 +1,4 @@
-package com.ensoftcorp.open.c.commons;
+package com.ensoftcorp.open.c.commons.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -9,7 +9,7 @@ import org.osgi.framework.BundleContext;
 public class Activator extends AbstractUIPlugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "com.ensoftcorp.open.c.commons"; //$NON-NLS-1$
+	public static final String PLUGIN_ID = "com.ensoftcorp.open.c.commons.ui"; //$NON-NLS-1$
 	
 	// The shared instance
 	private static Activator plugin;

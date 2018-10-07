@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <!-- add the smart views -->
+   <extension
+         point="com.ensoftcorp.atlas.ui.smartViewScript">
+      <script
+            class="com.ensoftcorp.open.c.commons.ui.ui.smart.ControlFlowWithinFunctionSmartView">
+      </script>
+      <script
+            class="com.ensoftcorp.open.c.commons.ui.ui.smart.DataFlowWithinFunctionSmartView">
+      </script>
+      <script
+            class="com.ensoftcorp.open.c.commons.ui.ui.smart.MatchingPairSearchModelSmartView">
+      </script>
+      <script
+            class="com.ensoftcorp.open.c.commons.ui.ui.smart.TypeOfSmartView">
+      </script>
+   </extension>
+   
+</plugin>
