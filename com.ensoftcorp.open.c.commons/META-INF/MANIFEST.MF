@@ -18,3 +18,4 @@ Export-Package: com.ensoftcorp.open.c.commons,
 Bundle-ActivationPolicy: lazy
 Bundle-Name: C Toolbox Commons
 Bundle-Vendor: EnSoft Corp.
+Automatic-Module-Name: com.ensoftcorp.open.c.commons
