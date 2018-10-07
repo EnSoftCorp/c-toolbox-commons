@@ -6,16 +6,16 @@
    <extension
          point="com.ensoftcorp.atlas.ui.smartViewScript">
       <script
-            class="com.ensoftcorp.open.c.commons.ui.ui.smart.ControlFlowWithinFunctionSmartView">
+            class="com.ensoftcorp.open.c.commons.ui.smart.ControlFlowWithinFunctionSmartView">
       </script>
       <script
-            class="com.ensoftcorp.open.c.commons.ui.ui.smart.DataFlowWithinFunctionSmartView">
+            class="com.ensoftcorp.open.c.commons.ui.smart.DataFlowWithinFunctionSmartView">
       </script>
       <script
-            class="com.ensoftcorp.open.c.commons.ui.ui.smart.MatchingPairSearchModelSmartView">
+            class="com.ensoftcorp.open.c.commons.ui.smart.MatchingPairSearchModelSmartView">
       </script>
       <script
-            class="com.ensoftcorp.open.c.commons.ui.ui.smart.TypeOfSmartView">
+            class="com.ensoftcorp.open.c.commons.ui.smart.TypeOfSmartView">
       </script>
    </extension>
    

@@ -1,26 +1,27 @@
-package com.ensoftcorp.open.c.commons.ui.ui.smart;
+package com.ensoftcorp.open.c.commons.ui.smart;
 
 import java.awt.Color;
 
 import com.ensoftcorp.atlas.core.markup.Markup;
 import com.ensoftcorp.atlas.core.markup.MarkupProperty;
 import com.ensoftcorp.atlas.core.query.Q;
-import com.ensoftcorp.atlas.core.script.Common;
 import com.ensoftcorp.atlas.core.script.StyledResult;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
 import com.ensoftcorp.atlas.ui.scripts.selections.FilteringAtlasSmartViewScript;
 import com.ensoftcorp.atlas.ui.selection.event.IAtlasSelectionEvent;
-import com.ensoftcorp.open.commons.analysis.CommonQueries;
+import com.ensoftcorp.open.c.commons.analysis.CommonQueries;
 
 /**
- * For a selected function, displays the data flow graph embedded in the control
- * flow graph. The control flow edge back to the start of the loop is
- * highlighted in blue.
+ * For a selected node, displays the immediate type and the basis of that type.
  */
-public class DataFlowWithinFunctionSmartView extends FilteringAtlasSmartViewScript {
+public class TypeOfSmartView extends FilteringAtlasSmartViewScript {
+
 	@Override
 	public String[] getSupportedNodeTags() {
-		return new String[]{XCSG.Function};
+		return new String[]{XCSG.DataFlow_Node, 
+				XCSG.Variable,
+				XCSG.Type, 
+				XCSG.TypeAlias};
 	}
 
 	@Override
@@ -30,18 +31,16 @@ public class DataFlowWithinFunctionSmartView extends FilteringAtlasSmartViewScri
 
 	@Override
 	public StyledResult selectionChanged(IAtlasSelectionEvent input, Q filteredSelection) {
-		Q functions = filteredSelection;
-
-		Q result = CommonQueries.dfg(functions).union(CommonQueries.cfg(functions));
+		Q res = CommonQueries.typeOf(filteredSelection);
 		
 		Markup m = new Markup();
-		m.setEdge(Common.codemap().edges(XCSG.ControlFlowBackEdge), MarkupProperty.EDGE_COLOR, Color.BLUE);
-
-		return new StyledResult(result, m);
+		m.setEdge(CommonQueries.typeEdges(), MarkupProperty.EDGE_COLOR, Color.BLUE);
+		
+		return new StyledResult(res, m);
 	}
 
 	@Override
 	public String getTitle() {
-		return "Data Flow (within a function)";
+		return "TypeOf";
 	}
 }

@@ -1,4 +1,4 @@
-package com.ensoftcorp.open.c.commons.ui.ui.smart;
+package com.ensoftcorp.open.c.commons.ui.smart;
 
 
 import com.ensoftcorp.atlas.core.query.Q;
