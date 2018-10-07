@@ -35,7 +35,7 @@ public class MatchingPairSearchModelSmartView extends FilteringAtlasSmartViewScr
 	 * @param f1
 	 */
 	public static void setAllowedLeafNodes(Q leaves) {
-		MatchingPairSearchModelSmartView.leaves = leaves.nodesTaggedWithAny(XCSG.Function);
+		MatchingPairSearchModelSmartView.leaves = leaves.nodes(XCSG.Function);
 	}
 	
 	@Override

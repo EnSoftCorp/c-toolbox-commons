@@ -7,6 +7,7 @@ import com.ensoftcorp.atlas.core.db.graph.Node;
 import com.ensoftcorp.atlas.core.db.set.AtlasHashSet;
 import com.ensoftcorp.atlas.core.db.set.AtlasSet;
 import com.ensoftcorp.atlas.core.query.Q;
+import com.ensoftcorp.atlas.core.query.Query;
 import com.ensoftcorp.atlas.core.script.Common;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
 import com.ensoftcorp.open.commons.analysis.CallSiteAnalysis.LanguageSpecificCallSiteAnalysis;
@@ -44,7 +45,7 @@ public class CallSiteAnalysis extends LanguageSpecificCallSiteAnalysis {
 	 * @return
 	 */
 	public static AtlasSet<Node> getInvokedFunction(Node callsite) {
-		return Common.universe().edgesTaggedWithAny(XCSG.InvokedFunction).successors(Common.toQ(callsite)).eval().nodes();
+		return Query.universe().edges(XCSG.InvokedFunction).successors(Common.toQ(callsite)).eval().nodes();
 	}
 	
 	/**
@@ -75,7 +76,7 @@ public class CallSiteAnalysis extends LanguageSpecificCallSiteAnalysis {
 	 * @return
 	 */
 	public static AtlasSet<Node> getFunctionInvocations(Node function) {
-		return Common.universe().edgesTaggedWithAny(XCSG.InvokedFunction).predecessors(Common.toQ(function)).eval().nodes();
+		return Query.universe().edges(XCSG.InvokedFunction).predecessors(Common.toQ(function)).eval().nodes();
 	}
 
 	@Override

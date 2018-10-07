@@ -7,13 +7,14 @@ import com.ensoftcorp.atlas.core.db.graph.Node;
 import com.ensoftcorp.atlas.core.db.set.AtlasHashSet;
 import com.ensoftcorp.atlas.core.db.set.AtlasSet;
 import com.ensoftcorp.atlas.core.query.Q;
+import com.ensoftcorp.atlas.core.query.Query;
 import com.ensoftcorp.atlas.core.script.Common;
 import com.ensoftcorp.atlas.core.script.CommonQueries;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
+import com.ensoftcorp.open.c.commons.log.Log;
 import com.ensoftcorp.open.commons.algorithms.UniqueEntryExitControlFlowGraph;
 import com.ensoftcorp.open.commons.algorithms.UniqueEntryExitGraph;
 import com.ensoftcorp.open.commons.algorithms.dominance.DominatorTree;
-import com.ensoftcorp.open.commons.log.Log;
 import com.ensoftcorp.open.commons.preferences.CommonsPreferences;
 
 /**
@@ -24,9 +25,12 @@ import com.ensoftcorp.open.commons.preferences.CommonsPreferences;
  */
 public class GotoLoopDetection {
 	public static String recoverGotoLoops() {
-		return recoverGotoLoops(Common.universe());
+		return recoverGotoLoops(Query.universe());
 	}
 
+	// TODO: Where does this constant come from?? XCSG?? I can't find it... ~BH
+	private static final String IS_LABEL = "isLabel";
+	
 	public static String recoverGotoLoops(Q app) {
 		String message = "Total number of Goto Loops = ";
 		long totalLoops = 0l;
@@ -35,7 +39,7 @@ public class GotoLoopDetection {
 			AtlasSet<Edge> allEdges = new AtlasHashSet<Edge>();
 			Q cfg = CommonQueries.cfg(Common.toQ(function));
 			allEdges.addAll(cfg.eval().edges());
-			Q labelNodesQ = cfg.contained().nodesTaggedWithAny("isLabel");
+			Q labelNodesQ = cfg.contained().nodes(IS_LABEL);
 			AtlasSet<Node> labelNodes = labelNodesQ.eval().nodes();
 
 			if (!CommonQueries.isEmpty(labelNodesQ)) {

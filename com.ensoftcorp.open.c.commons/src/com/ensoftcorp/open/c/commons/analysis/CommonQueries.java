@@ -19,6 +19,7 @@ import com.ensoftcorp.atlas.core.db.set.EmptyAtlasSet;
 import com.ensoftcorp.atlas.core.db.set.IntersectionSet;
 import com.ensoftcorp.atlas.core.index.common.SourceCorrespondence;
 import com.ensoftcorp.atlas.core.query.Q;
+import com.ensoftcorp.atlas.core.query.Query;
 import com.ensoftcorp.atlas.core.script.Common;
 import com.ensoftcorp.atlas.core.script.CommonQueries.TraversalDirection;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
@@ -1092,7 +1093,7 @@ public final class CommonQueries {
 	 * @return intra-procedural data-flow graph
 	 */
 	public static Q projectDFG(Q dfg, Q func){
-		Q functionBody = func.contained().induce(Common.universe());
+		Q functionBody = func.contained().induce(Query.universe());
 		return functionBody.intersection(dfg);
 	}
 	
@@ -1191,12 +1192,12 @@ public final class CommonQueries {
 
 	private static Q findByName(String functionName, String tag) {
 		if(functionName.indexOf("*") >= 0){
-			Q nodes = Common.universe().nodes(tag);
+			Q nodes = Query.universe().nodes(tag);
 			Q result = getMatches(functionName, nodes);
 			return result;
 		}
 		// Atlas has an index over literal attribute values, so it's faster to query directly
-		return Common.universe().nodes(tag).selectNode(XCSG.name, functionName);
+		return Query.universe().nodes(tag).selectNode(XCSG.name, functionName);
 	}
 
 	/**
@@ -1325,7 +1326,7 @@ public final class CommonQueries {
 		}
 		
 		public static Graph reverseDF(AtlasSet<Node> origin, AtlasSet<Node> stop) {
-			Graph context = Common.universe().edgesTaggedWithAny(XCSG.DataFlow_Edge).eval();
+			Graph context = Query.universe().edges(XCSG.DataFlow_Edge).eval();
 			return traverse(context, TraversalDirection.REVERSE, origin, stop);
 		}
 		
@@ -1335,7 +1336,7 @@ public final class CommonQueries {
 		}
 		
 		public static Graph forwardDF(AtlasSet<Node> origin, AtlasSet<Node> stop) {
-			Graph context = Common.universe().edgesTaggedWithAny(XCSG.DataFlow_Edge).eval();
+			Graph context = Query.universe().edges(XCSG.DataFlow_Edge).eval();
 			return traverse(context, TraversalDirection.FORWARD, origin, stop);
 		}
 
