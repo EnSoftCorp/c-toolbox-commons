@@ -56,6 +56,7 @@ public class GotoLoopDetection {
 							Edge e = cfg.betweenStep(gotoNodeQ, labelQ).edges(XCSG.ControlFlow_Edge).eval().edges().one();
 							if (!idomOfLabel.getAttr(XCSG.name).toString().contains("goto")) {
 								e.tag("Goto_Back_Edge");
+								label.tag("Goto_Loop");
 								totalLoops++;
 							}
 							break;
@@ -69,6 +70,43 @@ public class GotoLoopDetection {
 
 	}
 
+	public static String recoverFunctionGotoLoops(Q cfg) {
+		String message = "Total number of Goto Loops = ";
+		long totalLoops = 0l;
+		Q labelNodesQ = cfg.contained().nodes(IS_LABEL);
+		if (CommonQueries.isEmpty(labelNodesQ)) {
+			return message + totalLoops;
+		}
+		AtlasSet<Edge> allEdges = new AtlasHashSet<Edge>();
+		allEdges.addAll(cfg.eval().edges());
+		AtlasSet<Node> labelNodes = labelNodesQ.eval().nodes();
+		if (!CommonQueries.isEmpty(labelNodesQ)) {
+			for (Node label : labelNodes) {
+				Node gotoNode = null;
+				Q labelQ = Common.toQ(label);
+				AtlasSet<Node> successors = cfg.forward(labelQ).eval().nodes();
+				for (Node node : cfg.predecessors(labelQ).eval().nodes()) {
+					if (successors.contains(node)) {
+						if (node.getAttr(XCSG.name).toString().contains("goto")) {
+							gotoNode = node;
+							Q gotoNodeQ = Common.toQ(gotoNode);
+							Edge e = cfg.betweenStep(gotoNodeQ, labelQ).edges(XCSG.ControlFlow_Edge).eval().edges()
+									.one();
+							e.tag("Goto_Back_Edge");
+							label.tag("Goto_Loop");
+							totalLoops++;
+							break;
+						}
+					}
+				}
+			}
+		}
+
+		return message + totalLoops;
+
+	}
+
+	
 	/**
 	 * Returns an immediate dominator (idom) mapping in the control flow graph of the given function
 	 * @param function

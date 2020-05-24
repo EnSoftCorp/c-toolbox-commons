@@ -25,10 +25,10 @@ import com.ensoftcorp.atlas.core.script.CommonQueries.TraversalDirection;
 import com.ensoftcorp.atlas.core.xcsg.XCSG;
 
 /**
- * Common queries which are useful for writing larger Java analysis programs,
+ * Common queries which are useful for writing larger C analysis programs,
  * and for using on the shell.
  * 
- * @author Ben Holland, Tom Deering, Jon Mathews
+ * @author Ben Holland, Tom Deering, Jon Mathews, Ahmed Tamrawi
  */
 public final class CommonQueries {	
 	
