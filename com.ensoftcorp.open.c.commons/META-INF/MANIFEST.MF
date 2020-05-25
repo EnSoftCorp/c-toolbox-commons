@@ -1,13 +1,13 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: com.ensoftcorp.open.c.commons;singleton:=true
-Bundle-Version: 3.3.7.qualifier
+Bundle-Version: 3.6.0.qualifier
 Require-Bundle: org.eclipse.core.runtime;visibility:=reexport,
  org.eclipse.core.resources;visibility:=reexport,
  com.ensoftcorp.atlas.c.core;bundle-version="3.6.0";visibility:=reexport,
  com.ensoftcorp.atlas.c.ui;bundle-version="3.6.0";visibility:=reexport,
- com.ensoftcorp.atlas.scala-lang;bundle-version="3.3.7";visibility:=reexport,
- com.ensoftcorp.open.commons;bundle-version="3.3.7";visibility:=reexport
+ com.ensoftcorp.atlas.scala-lang;bundle-version="3.6.0";visibility:=reexport,
+ com.ensoftcorp.open.commons;bundle-version="3.6.0";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: com.ensoftcorp.open.c.commons.analysis
 Bundle-ActivationPolicy: lazy

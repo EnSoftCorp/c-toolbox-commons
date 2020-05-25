@@ -67,7 +67,6 @@ public class GotoLoopDetection {
 		}
 
 		return message + totalLoops;
-
 	}
 
 	public static String recoverFunctionGotoLoops(Q cfg) {
