@@ -65,8 +65,7 @@ public class CallSiteAnalysis extends LanguageSpecificCallSiteAnalysis {
 	public static AtlasSet<Node> getFunctionInvocations(AtlasSet<Node> functions) {
 		AtlasSet<Node> invocations = new AtlasHashSet<Node>();
 		for(@SuppressWarnings("unused") Node function : functions){
-			invocations.add(getFunctionInvocations(functions));
-		}
+			invocations.addAll(getFunctionInvocations(function));	}
 		return invocations;
 	}
 
