@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: com.ensoftcorp.open.c.commons.ui;singleton:=true
-Bundle-Version: 3.7.0.qualifier
+Bundle-Version: 4.2.2.qualifier
 Require-Bundle: com.ensoftcorp.atlas.c.ui;bundle-version="3.6.0";visibility:=reexport,
  com.ensoftcorp.atlas.ui.shell;bundle-version="3.6.0";visibility:=reexport,
  com.ensoftcorp.open.commons.ui;bundle-version="3.6.0";visibility:=reexport,
