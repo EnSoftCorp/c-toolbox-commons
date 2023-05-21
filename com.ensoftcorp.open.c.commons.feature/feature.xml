@@ -2,7 +2,7 @@
 <feature
       id="com.ensoftcorp.open.c.commons.feature"
       label="C Commons Toolbox"
-      version="4.2.3.qualifier"
+      version="3.9.2.qualifier"
       provider-name="EnSoft Corp.">
 
    <description url="https://ensoftcorp.github.io/c-commons-toolbox/">
